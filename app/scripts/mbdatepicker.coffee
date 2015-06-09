@@ -26,6 +26,7 @@ app.directive("outsideClick", ['$document', '$parse', ($document, $parse) ->
 app.directive('mbDatepicker', [()->
   scope: {
     elementId: '@',
+    formattedDate: '=',
     date: '=',
     dateFormat: '@'
     minDate: '@'
@@ -38,7 +39,7 @@ app.directive('mbDatepicker', [()->
   }
   template: '
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
-                    <input name="{{ inputName }}" type="text" class="mb-input-field"  ng-click="showPicker()"  class="form-control"  ng-model="date" placeholder="{{ placeholder }}">
+                    <input name="{{ inputName }}" value="{{formattedDate}}" type="text" class="mb-input-field"  ng-click="showPicker()"  class="form-control" placeholder="{{ placeholder }}">
                     <div class="mb-datepicker" ng-show="isVisible">
                         <table>
                             <caption>
@@ -77,7 +78,7 @@ app.directive('mbDatepicker', [()->
     console.log scope.calendarHeader
 # Vars
     selectors = document.querySelector('#dateSelectors')
-    today = moment()
+    today = moment(scope.date)
     scope.month = '';
     scope.year = today.year();
 
@@ -118,7 +119,7 @@ app.directive('mbDatepicker', [()->
           monthDays.push({value: newDate, isToday: true, isEnabled: false, class: 'disabled'})
         else if(scope.maxDate and moment(newDate, scope.dateFormat) >= moment(scope.maxDate, scope.dateFormat))
           monthDays.push({value: newDate, isToday: true, isEnabled: false, class: 'disabled'})
-        else if newDate.format(scope.dateFormat) == moment().format(scope.dateFormat)
+        else if newDate.format(scope.dateFormat) == today.format(scope.dateFormat)
           monthDays.push({value: newDate, isToday: true, isEnabled: true, class: 'day-item today'})
         else if(newDate.month() == month)
           monthDays.push({value: newDate, isToday: false, isEnabled: true, class: 'day-item day'})
@@ -209,7 +210,10 @@ app.directive('mbDatepicker', [()->
     # Logic to hide the view if a date is selected
     scope.selectDate = (day) ->
       if day.isEnabled
-        scope.date = day.value.format(scope.dateFormat)
+        today = day.value;
+        scope.date = day.value.format("YYYY-MM-DD")
+        scope.formattedDate = day.value.format(scope.dateFormat)
+        init()
         scope.isVisible = false;
 
 
@@ -224,14 +228,14 @@ app.directive('mbDatepicker', [()->
 
     init = ->
 # First day of month
-      firstMonday = moment(moment().date(today.month())).startOf('isoweek')
+      firstMonday = moment(moment(today).date(today.month())).startOf('isoweek')
       if(firstMonday.format('DD') != '01') then firstMonday.subtract(1, 'weeks')
 
       # No. of days in month
-      days = moment(moment().date(today.month())).daysInMonth()
+      days = moment(moment(today).date(today.month())).daysInMonth()
 
       # Last day of month
-      endDate = moment().add(1, 'months').date(0);
+      endDate = moment(today).add(1, 'months').date(0);
       scope.month = (endDate.format('MMMM'))
 
       # Check if last date is sunday, else add days to get to Sunday
