@@ -42,8 +42,8 @@
       return {
         scope: {
           elementId: '@',
-          formattedDate: '=',
-          date: '=',
+          formattedDate: '=?',
+          date: '=?',
           dateFormat: '@',
           minDate: '@',
           maxDate: '@',
@@ -57,11 +57,21 @@
         restrict: 'E',
         transclude: true,
         link: function(scope, element, attrs) {
+
           var getWeeks, init, selectors, today;
-          console.log(scope.calendarHeader);
           selectors = document.querySelector('#dateSelectors');
-          today = moment(scope.date);
-          scope.formattedDate = today.format("LL");
+
+          if (scope.date !== undefined) {
+            if (scope.date != "") {
+              today = moment(scope.date);
+              scope.formattedDate = today.format("LL");
+            } else {
+              today = moment();
+            }
+          } else {
+            today = moment();
+
+          }
 
           scope.month = '';
           console.log(scope);
