@@ -38,6 +38,7 @@ app.directive('mbDatepicker', [()->
     calendarHeader: '=?'
   }
   template: '
+            <div class="mb-datepicker-background" ng-show="isVisible" ng-click="hidePicker()"></div>
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
                     <input name="{{ inputName }}" value="{{formattedDate}}" type="text" class="mb-input-field"  ng-click="showPicker()"  class="form-control" placeholder="{{ placeholder }}">
                     <div class="mb-datepicker" ng-show="isVisible">
