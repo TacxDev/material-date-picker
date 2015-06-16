@@ -25,9 +25,10 @@ app.directive("outsideClick", ['$document', '$parse', ($document, $parse) ->
 ])
 app.directive('mbDatepicker', [()->
   scope: {
+    style: '=?'
     elementId: '@',
-    formattedDate: '=',
-    date: '=',
+    formattedDate: '=?',
+    date: '=?',
     dateFormat: '@'
     minDate: '@'
     maxDate: '@'
@@ -40,7 +41,7 @@ app.directive('mbDatepicker', [()->
   template: '
             <div class="mb-datepicker-background" ng-show="isVisible" ng-click="hidePicker()"></div>
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
-                  <input name="{{ inputName }}" value="{{formattedDate}}" type="text" class="mb-input-field"  ng-click="showPicker()"  class="form-control" placeholder="{{ placeholder }}">
+                  <input readonly name="{{ inputName }}" value="{{formattedDate}}" type="text" ng-click="showPicker()" placeholder="{{ placeholder }}">
                   <div class="mb-datepicker-wrapper" ng-show="isVisible">
                     <div class="mb-datepicker" ng-show="isVisible">
                         <table>
@@ -223,15 +224,24 @@ app.directive('mbDatepicker', [()->
     scope.selectDate = (day) ->
       if day.isEnabled
         today = day.value;
+
         scope.date = day.value.format("YYYY-MM-DD")
-        scope.formattedDate = day.value.format(scope.dateFormat)
+    
         init()
+        scope.formattedDate = day.value.format("LL");
+
+        field = document.getElementById('input_003');
+        field.focus();
+        field.value = scope.formattedDate;
+
         scope.isVisible = false;
 
 
     scope.isVisible = false
     scope.showPicker = ->
       init()
+      scope.year = today.year();
+
       scope.isVisible = true
       return
 
@@ -241,8 +251,6 @@ app.directive('mbDatepicker', [()->
 
     init = ->
 # First day of month
-      scope.previousYear(today)
-      scope.nextYear(today)
       firstMonday = moment(moment(today).date(today.month())).startOf('isoweek')
       if(firstMonday.format('DD') != '01') then firstMonday.subtract(1, 'weeks')
 
