@@ -62,7 +62,7 @@
           console.log(scope.calendarHeader);
           selectors = document.querySelector('#dateSelectors');
           inputValue = scope.date;
-          if (!inputValue) {
+          if (!inputValue || (inputValue = '')) {
             inputValue = moment().subtract(18, "y");
           }
           today = moment(inputValue);

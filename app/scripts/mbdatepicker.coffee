@@ -230,10 +230,6 @@ app.directive('mbDatepicker', [()->
         init()
         scope.formattedDate = day.value.format("LL");
 
-        field = document.getElementById('input_003');
-        field.focus();
-        field.value = scope.formattedDate;
-
         scope.isVisible = false;
 
 
