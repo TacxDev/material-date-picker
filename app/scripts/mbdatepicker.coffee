@@ -54,7 +54,7 @@ app.directive('mbDatepicker', [()->
                               <div class="header-nav-wrapper">
                                   <span class="header-item noselect" style="float: left; cursor:pointer" ng-click="previousMonth(currentDate)"><img style="height: 10px;" ng-src="{{ arrows.month.left }}"/></span>
                                   <span class="header-month noselect">{{ month }}</span>
-                                  <span class="header-item header-right noselect" style="float: right; cursor:pointer" ng-click="nextMonth(currentDate)"> <img style="height: 10px;" ng-src="{{ arrows.month.right }}"/></span>
+                                  <span class="header-item noselect" style="float: right; cursor:pointer" ng-click="nextMonth(currentDate)"> <img style="height: 10px;" ng-src="{{ arrows.month.right }}"/></span>
                               </div>
                             </caption>
                             <tbody>
@@ -241,7 +241,6 @@ app.directive('mbDatepicker', [()->
     scope.showPicker = ->
       init()
       scope.year = today.year();
-
       scope.isVisible = true
       return
 
