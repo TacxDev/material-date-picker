@@ -226,15 +226,11 @@
             return scope.month = last_month.format('MMMM');
           };
           scope.selectDate = function(day) {
-            var field;
             if (day.isEnabled) {
               today = day.value;
               scope.date = day.value.format("YYYY-MM-DD");
               init();
-              scope.formattedDate = day.value.format("LL");
-              field = document.getElementById('input_003');
-              field.focus();
-              field.value = scope.formattedDate;
+              scope.formattedDate = day.value.format(scope.date);
               return scope.isVisible = false;
             }
           };

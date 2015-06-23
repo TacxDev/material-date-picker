@@ -68,7 +68,7 @@ app.directive('mbDatepicker', [()->
                                 <td class="day-head">{{ calendarHeader.sunday }}</td>
                               </tr>
                               <tr class="days" ng-repeat="week in weeks">
-                                <td ng-click="selectDate(day)" class="noselect" ng-class="day.class" ng-repeat="day in week">{{ day.value.format(\'DD\') }}</td>
+                                <td date="{{day.value.format(\'YYYY-MM-DD\')}}" ng-click="selectDate(day)" class="noselect" ng-class="day.class" ng-repeat="day in week">{{ day.value.format(\'DD\') }}</td>
                               </tr>
                             </tbody>
                         </table>
