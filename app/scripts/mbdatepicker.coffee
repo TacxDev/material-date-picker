@@ -86,8 +86,13 @@ app.directive('mbDatepicker', [()->
 
     inputValue = scope.date;
 
-    if !inputValue then inputValue = moment().subtract(18, "y");
-    
+    if !inputValue or inputValue is ""
+      # inputValue = moment("1984-01-09");
+      # scope.formattedDate = inputValue.format("YYYY-MM-DD");
+      inputValue = moment().subtract(18, "y");
+    else
+      scope.formattedDate = inputValue
+
 
     today = moment(inputValue);
 
@@ -228,7 +233,7 @@ app.directive('mbDatepicker', [()->
         scope.date = day.value.format("YYYY-MM-DD")
     
         init()
-        scope.formattedDate = day.value.format("LL");
+        scope.formattedDate = day.value.format(scope.date);
 
         scope.isVisible = false;
 
