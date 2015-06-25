@@ -25,9 +25,10 @@ app.directive("outsideClick", ['$document', '$parse', ($document, $parse) ->
 ])
 app.directive('mbDatepicker', [()->
   scope: {
+    style: '=?'
     elementId: '@',
-    formattedDate: '=',
-    date: '=',
+    formattedDate: '=?',
+    date: '=?',
     dateFormat: '@'
     minDate: '@'
     maxDate: '@'
@@ -38,8 +39,10 @@ app.directive('mbDatepicker', [()->
     calendarHeader: '=?'
   }
   template: '
+            <div class="mb-datepicker-background" ng-show="isVisible" ng-click="hidePicker()"></div>
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
-                    <input name="{{ inputName }}" value="{{formattedDate}}" type="text" class="mb-input-field"  ng-click="showPicker()"  class="form-control" placeholder="{{ placeholder }}">
+                  <input readonly name="{{ inputName }}" value="{{formattedDate}}" type="text" ng-click="showPicker()" placeholder="{{ placeholder }}">
+                  <div class="mb-datepicker-wrapper" ng-show="isVisible">
                     <div class="mb-datepicker" ng-show="isVisible">
                         <table>
                             <caption>
@@ -51,7 +54,7 @@ app.directive('mbDatepicker', [()->
                               <div class="header-nav-wrapper">
                                   <span class="header-item noselect" style="float: left; cursor:pointer" ng-click="previousMonth(currentDate)"><img style="height: 10px;" ng-src="{{ arrows.month.left }}"/></span>
                                   <span class="header-month noselect">{{ month }}</span>
-                                  <span class="header-item header-right noselect" style="float: right; cursor:pointer" ng-click="nextMonth(currentDate)"> <img style="height: 10px;" ng-src="{{ arrows.month.right }}"/></span>
+                                  <span class="header-item noselect" style="float: right; cursor:pointer" ng-click="nextMonth(currentDate)"> <img style="height: 10px;" ng-src="{{ arrows.month.right }}"/></span>
                               </div>
                             </caption>
                             <tbody>
@@ -65,12 +68,14 @@ app.directive('mbDatepicker', [()->
                                 <td class="day-head">{{ calendarHeader.sunday }}</td>
                               </tr>
                               <tr class="days" ng-repeat="week in weeks">
-                                <td ng-click="selectDate(day)" class="noselect" ng-class="day.class" ng-repeat="day in week">{{ day.value.format(\'DD\') }}</td>
+                                <td date="{{day.value.format(\'YYYY-MM-DD\')}}" ng-click="selectDate(day)" class="noselect" ng-class="day.class" ng-repeat="day in week">{{ day.value.format(\'DD\') }}</td>
                               </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
+                  </div>
+            </div>
+            
 '
   restrict: 'E',
   transclude: true,
@@ -78,7 +83,18 @@ app.directive('mbDatepicker', [()->
     console.log scope.calendarHeader
 # Vars
     selectors = document.querySelector('#dateSelectors')
-    today = moment(scope.date)
+
+    inputValue = scope.date;
+
+    if !inputValue or inputValue is ""
+      inputValue = moment().subtract(18, "y");
+    else
+      scope.formattedDate = inputValue
+
+
+    today = moment(inputValue);
+
+
     scope.month = '';
     scope.year = today.year();
 
@@ -211,14 +227,19 @@ app.directive('mbDatepicker', [()->
     scope.selectDate = (day) ->
       if day.isEnabled
         today = day.value;
+
         scope.date = day.value.format("YYYY-MM-DD")
-        scope.formattedDate = day.value.format(scope.dateFormat)
+    
         init()
+        scope.formattedDate = day.value.format(scope.date);
+
         scope.isVisible = false;
 
 
     scope.isVisible = false
     scope.showPicker = ->
+      init()
+      scope.year = today.year();
       scope.isVisible = true
       return
 
