@@ -25,7 +25,6 @@ app.directive("outsideClick", ['$document', '$parse', ($document, $parse) ->
 ])
 app.directive('mbDatepicker', [()->
   scope: {
-    style: '=?'
     elementId: '@',
     formattedDate: '=?',
     date: '=?',
@@ -41,7 +40,7 @@ app.directive('mbDatepicker', [()->
   template: '
             <div class="mb-datepicker-background" ng-show="isVisible" ng-click="hidePicker()"></div>
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
-                  <input readonly name="{{ inputName }}" value="{{formattedDate}}" type="text" ng-click="showPicker()" placeholder="{{ placeholder }}">
+                  <input readonly name="{{ inputName }}" ng-model="formattedDate" type="text" ng-click="showPicker()" placeholder="{{ placeholder }}">
                   <div class="mb-datepicker-wrapper" ng-show="isVisible">
                     <div class="mb-datepicker" ng-show="isVisible">
                         <table>
@@ -80,20 +79,15 @@ app.directive('mbDatepicker', [()->
   restrict: 'E',
   transclude: true,
   link: (scope, element, attrs) ->
-    console.log scope.calendarHeader
 # Vars
     selectors = document.querySelector('#dateSelectors')
 
-    inputValue = scope.date;
-
-    if !inputValue or inputValue is ""
-      inputValue = moment().subtract(18, "y");
+    if !scope.date or scope.date is ""
+      today = moment().subtract(18, "y");
     else
-      scope.formattedDate = inputValue
-
-
-    today = moment(inputValue);
-
+      today = moment(scope.date);
+      
+    scope.formattedDate = today.format(scope.dateFormat);
 
     scope.month = '';
     scope.year = today.year();
@@ -229,9 +223,8 @@ app.directive('mbDatepicker', [()->
         today = day.value;
 
         scope.date = day.value.format("YYYY-MM-DD")
-    
-        init()
-        scope.formattedDate = day.value.format(scope.date);
+        scope.formattedDate = day.value.format(scope.dateFormat);
+        init();
 
         scope.isVisible = false;
 
