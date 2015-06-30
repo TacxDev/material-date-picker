@@ -41,7 +41,7 @@ app.directive('mbDatepicker', ['$timeout', ($timeout)->
   template: '
             <div class="mb-datepicker-background" ng-show="isVisible" ng-click="hidePicker()"></div>
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
-                  <input type="text" name="{{ inputName }}" ng-model="formattedDate" ng-click="showPicker()" placeholder="{{ placeholder }}">
+                  <input readonly type="text" name="{{ inputName }}" ng-model="formattedDate" ng-click="showPicker()" placeholder="{{ placeholder }}">
                   <div class="mb-datepicker-wrapper" ng-show="isVisible">
                     <div class="mb-datepicker" ng-show="isVisible">
                         <table>
