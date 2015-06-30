@@ -23,7 +23,7 @@ app.directive("outsideClick", ['$document', '$parse', ($document, $parse) ->
       return
     return
 ])
-app.directive('mbDatepicker', [()->
+app.directive('mbDatepicker', ['$timeout', ($timeout)->
   scope: {
     elementId: '@',
     formattedDate: '=?',
@@ -36,11 +36,12 @@ app.directive('mbDatepicker', [()->
     placeholder: '@'
     arrows: '=?'
     calendarHeader: '=?'
+    change: '&?'
   }
   template: '
             <div class="mb-datepicker-background" ng-show="isVisible" ng-click="hidePicker()"></div>
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
-                  <input readonly name="{{ inputName }}" ng-model="formattedDate" type="text" ng-click="showPicker()" placeholder="{{ placeholder }}">
+                  <input type="text" name="{{ inputName }}" ng-model="formattedDate" ng-click="showPicker()" placeholder="{{ placeholder }}">
                   <div class="mb-datepicker-wrapper" ng-show="isVisible">
                     <div class="mb-datepicker" ng-show="isVisible">
                         <table>
@@ -221,11 +222,17 @@ app.directive('mbDatepicker', [()->
     scope.selectDate = (day) ->
       if day.isEnabled
         today = day.value;
-
-        scope.date = day.value.format("YYYY-MM-DD")
+        scope.date = day.value.format("YYYY-MM-DD");
         scope.formattedDate = day.value.format(scope.dateFormat);
-        init();
 
+        # TODO: not nice solution
+        $timeout(->
+          scope.$apply();
+          scope.$eval(scope.change());
+          init();
+          return;
+        );
+    
         scope.isVisible = false;
 
 
