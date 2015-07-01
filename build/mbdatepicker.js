@@ -64,8 +64,8 @@
             today = moment().subtract(18, "y");
           } else {
             today = moment(scope.date, "YYYY-MM-DD");
+            scope.formattedDate = today.format(scope.dateFormat);
           }
-          scope.formattedDate = today.format(scope.dateFormat);
           scope.month = '';
           scope.year = today.year();
           if (scope.inputClass) {

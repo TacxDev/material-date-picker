@@ -88,8 +88,9 @@ app.directive('mbDatepicker', ['$timeout', ($timeout)->
     else
       # careful https://github.com/moment/moment/issues/1407
       today = moment(scope.date, "YYYY-MM-DD");
+      scope.formattedDate = today.format(scope.dateFormat);
     
-    scope.formattedDate = today.format(scope.dateFormat);
+    
 
     scope.month = '';
     scope.year = today.year();
