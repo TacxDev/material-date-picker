@@ -63,7 +63,7 @@
           if (!scope.date || scope.date === "") {
             today = moment().subtract(18, "y");
           } else {
-            today = moment(scope.date);
+            today = moment(scope.date, "YYYY-MM-DD");
           }
           scope.formattedDate = today.format(scope.dateFormat);
           scope.month = '';
@@ -249,8 +249,12 @@
           };
           init = function() {
             var days, endDate, firstMonday;
-            firstMonday = moment(moment(today).date(today.month())).startOf('isoweek');
-            if (firstMonday.format('DD') !== '01') {
+            if (moment(today).date() === 1) {
+              firstMonday = moment(moment(today).date(today.month())).startOf('month');
+            } else {
+              firstMonday = moment(moment(today).date(today.month())).startOf('isoweek');
+            }
+            if (firstMonday.date() === 1) {
               firstMonday.subtract(1, 'weeks');
             }
             days = moment(moment(today).date(today.month())).daysInMonth();
