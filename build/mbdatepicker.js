@@ -248,12 +248,9 @@
             scope.isVisible = false;
           };
           init = function() {
-            var days, endDate, firstMonday;
-            if (moment(today).date() === 1) {
-              firstMonday = moment(moment(today).date(today.month())).startOf('month');
-            } else {
-              firstMonday = moment(moment(today).date(today.month())).startOf('isoweek');
-            }
+            var days, endDate, firstMonday, firstday;
+            firstday = moment(moment(today).date(1));
+            firstMonday = moment(firstday).startOf('isoweek');
             if (firstMonday.date() === 1) {
               firstMonday.subtract(1, 'weeks');
             }

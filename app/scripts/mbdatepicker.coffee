@@ -89,8 +89,6 @@ app.directive('mbDatepicker', ['$timeout', ($timeout)->
       # careful https://github.com/moment/moment/issues/1407
       today = moment(scope.date, "YYYY-MM-DD");
       scope.formattedDate = today.format(scope.dateFormat);
-    
-    
 
     scope.month = '';
     scope.year = today.year();
@@ -251,11 +249,10 @@ app.directive('mbDatepicker', ['$timeout', ($timeout)->
 
     init = ->
 # First day of month
-      # TODO: need to check this startof month or isoweek bug
-      if (moment(today).date() is 1)
-        firstMonday = moment(moment(today).date(today.month())).startOf('month')
-      else 
-        firstMonday = moment(moment(today).date(today.month())).startOf('isoweek')
+      # get the first day of the month
+      firstday = moment(moment(today).date(1))
+      # get the first day of the week of the first day of the month
+      firstMonday = moment(firstday).startOf('isoweek')
 
       if(firstMonday.date() is 1) then firstMonday.subtract(1, 'weeks')
 
@@ -278,6 +275,4 @@ app.directive('mbDatepicker', ['$timeout', ($timeout)->
         today.month()
       )
     init()
-
-
 ])
